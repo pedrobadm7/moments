@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MessagesService } from 'src/app/services/messages.service';
 
 import { MomentService } from 'src/app/services/moment.service';
 
@@ -23,7 +24,9 @@ export class MomentComponent implements OnInit {
 
   constructor(
     private momentService: MomentService,
-    private route: ActivatedRoute
+    private messagesService: MessagesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -32,5 +35,13 @@ export class MomentComponent implements OnInit {
     this.momentService
       .getMoment(id)
       .subscribe((item) => (this.moment = item.data));
+  }
+
+  async removeHandler(id: number) {
+    await this.momentService.removeMoment(id).subscribe();
+
+    this.messagesService.add('Momento excluído com sucesso!');
+
+    this.router.navigate(['/']);
   }
 }
